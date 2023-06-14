@@ -4,9 +4,9 @@ public class Point {
     private int x;
     private int y;
 
-    public Point(int X, int Y) {
-        this.x = X;
-        this.y = Y;
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public Point() {
@@ -20,7 +20,7 @@ public class Point {
 
 
     public int getY() {
-        return this.;
+        return this.y;
     }
 
 }
