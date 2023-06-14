@@ -1,26 +1,26 @@
 package exercise;
 
 public class Point {
-    private int X;
-    private int Y;
+    private int x;
+    private int y;
 
     public Point(int X, int Y) {
-        this.X = X;
-        this.Y = Y;
+        this.x = X;
+        this.y = Y;
     }
 
     public Point() {
-        X = 0;
-        Y = 0;
+        x = 0;
+        y = 0;
     }
 
     public int getX() {
-        return this.X;
+        return this.x;
     }
 
 
     public int getY() {
-        return this.Y;
+        return this.;
     }
 
 }
