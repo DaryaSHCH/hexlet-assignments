@@ -34,5 +34,10 @@ public class Cottage implements Home {
             return 0;
         }
     }
+
+    @Override
+    public int toCompare(Home another) {
+        return compareTo(another);
+    }
 }
 // END

@@ -55,8 +55,30 @@ class AppTest {
         List<String> result = App.buildApartmentsList(apartments, 10);
         assertThat(result).isEqualTo(expected);
     }
+    @Test
+    void testToCompare1() {
+        Flat flat = new Flat(45, 5, 3);
+        Cottage cottage = new Cottage(150, 7);
+        var result = flat.toCompare(cottage);
+        var expected = -1;
+        assertThat(result).isEqualTo(expected);
+    }
 
-    // BEGIN
-    
-    // END
+    @Test
+    void testToCompare2() {
+        Flat flat1 = new Flat(200, 5, 3);
+        Flat flat2 = new Flat(17, 3, 1);
+        var result = flat1.toCompare(flat2);
+        var expected = 1;
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void testToCompare3() {
+        Flat flat = new Flat(200, 5, 3);
+        Cottage cottage = new Cottage(205, 2);
+        var result = flat.toCompare(cottage);
+        var expected = 0;
+        assertThat(result).isEqualTo(expected);
+    }
 }
