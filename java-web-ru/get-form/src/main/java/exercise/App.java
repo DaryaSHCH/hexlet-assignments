@@ -24,7 +24,8 @@ public final class App {
             List<User> users;
             if (term != null) {
                 users = USERS.stream()
-                        .filter(u -> term.equalsIgnoreCase(u.getFirstName()))
+                        .filter(u -> u.getFirstName().toLowerCase()
+                                .startsWith(term.toLowerCase()))
                         .toList();
             } else {
                 users = USERS.stream().toList();
