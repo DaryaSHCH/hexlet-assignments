@@ -22,7 +22,6 @@ public final class App {
         app.get("/users", ctx -> {
             var term = ctx.queryParam("term");
             List<User> users;
-            // Фильтруем, только если была отправлена форма
             if (term != null) {
                 users = USERS.stream()
                         .filter(u -> term.equalsIgnoreCase(u.getFirstName()))
@@ -30,7 +29,7 @@ public final class App {
             } else {
                 users = USERS.stream().toList();
             }
-            var page = new UsersPage(users);
+            var page = new UsersPage(users, term);
             ctx.render("users/index.jte", Collections.singletonMap("page", page));
         });
         // END
