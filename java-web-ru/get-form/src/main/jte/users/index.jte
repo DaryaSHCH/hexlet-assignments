@@ -4,7 +4,7 @@
 
 <form action="/users" method="get">
   <input type="search" required name="term">
-  <input type="submit" value="Поиск">
+  <input type="submit" value="Search">
 </form>
 
 @template.layout.page(
