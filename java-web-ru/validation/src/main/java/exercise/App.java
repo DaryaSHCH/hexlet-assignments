@@ -35,14 +35,15 @@ public final class App {
         });
 
         app.post("/articles", ctx -> {
-            //var title = ctx.formParam("title");
-            //var content = ctx.formParam("content");
             try {
                 var title = ctx.formParam("title");
                 var content = ctx.formParam("content");
                 title = ctx.formParamAsClass("title", String.class)
                         .check(t -> t.length() >= 2, "Название не должно быть короче двух символов")
                         .check(t -> !ArticleRepository.existsByTitle(t), "Статья с таким названием уже существует")
+                        .get();
+                content = ctx.formParamAsClass("content", String.class)
+                        .check(c -> c.length() > 9, "Статья должна быть не короче 10 символов")
                         .get();
                 var article = new Article(title, content);
                 ArticleRepository.save(article);
