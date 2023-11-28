@@ -6,6 +6,7 @@ import exercise.dto.LoginPage;
 import exercise.repository.UsersRepository;
 import static exercise.util.Security.encrypt;
 
+import exercise.util.NamedRoutes;
 import exercise.util.Security;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
@@ -14,41 +15,36 @@ import io.javalin.validation.ValidationException;
 public class SessionsController {
 
     // BEGIN
-    public static void index(Context ctx) throws Exception {
-        var name = ctx.sessionAttribute("currentUser");
-        var page = new MainPage(name);
+    public static void index(Context ctx) {
+        var user = ctx.sessionAttribute("user");
+        var page = new MainPage(user);
         ctx.render("index.jte", Collections.singletonMap("page", page));
     }
+
     public static void build(Context ctx) {
-        var page = new LoginPage(null, null);
+        var page = new LoginPage("", "");
         ctx.render("build.jte", Collections.singletonMap("page", page));
-        ctx.redirect("/");
     }
 
     public static void create(Context ctx) {
-        try {
-            var name = ctx.formParamAsClass("name", String.class)
-                    .check(value -> UsersRepository.existsByName(value), "Wrong username")
-                    .get();
+        var name = ctx.formParam("name");
+        var password = ctx.formParam("password");
 
-            var user = UsersRepository.findByName(name);
-            var password = ctx.formParamAsClass("password", String.class)
-                    .check(value -> encrypt(value).hashCode() == user.getPassword().hashCode(),
-                            "Wrong password")
-                    .get();
-        } catch (NotFoundResponse e) {
-            var name = ctx.formParam("name");
-            var page = new LoginPage(name, e.getMessage());
+        var user = UsersRepository.findByName(name);
+
+        if (user != null && user.getPassword().equals(encrypt(password))) {
+            ctx.sessionAttribute("user", user.getName());
+            ctx.redirect("/");
+        } else {
+            var errorMessage = "Wrong username or password";
+            var page = new LoginPage(name, errorMessage);
             ctx.render("build.jte", Collections.singletonMap("page", page));
         }
     }
 
     public static void destroy(Context ctx) {
-        ctx.sessionAttribute("currentUser", null);
+        ctx.sessionAttribute("user", null);
         ctx.redirect("/");
-
-        var page = new MainPage(ctx.sessionAttribute("name"));
-        ctx.render("index.jte", Collections.singletonMap("page", page));
     }
     // END
 }
