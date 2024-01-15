@@ -10,24 +10,8 @@ public class Application {
 
         // BEGIN
         for (Method method : Address.class.getDeclaredMethods()) {
-
-            // Проверяем, есть ли у метода аннотация @LogExecutionTime
             if (method.isAnnotationPresent(Inspect.class)) {
-
-                var startTime = System.currentTimeMillis();
-
-                try {
-                    // Выполняем метод с аннотацией LogExecutionTime
-                    method.invoke(address);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                String city = address.getCity();
-                long postalCode = address.getPostalCode();
-
                 System.out.println("Method " + method.getName() + " returns a value of type " + method.getReturnType().getSimpleName());
-                //System.out.println("Execution time: " + executionTime + " milliseconds");
             }
         }
         // END
