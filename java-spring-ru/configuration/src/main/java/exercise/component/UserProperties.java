@@ -13,5 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 public class UserProperties {
+
     private List<String> admins;
 }

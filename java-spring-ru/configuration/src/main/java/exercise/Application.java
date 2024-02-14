@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
+import exercise.component.UserProperties;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,21 +17,22 @@ import exercise.model.User;
 
 @SpringBootApplication
 @RestController
+@Setter
 public class Application {
 
-    // Все пользователи
     private List<User> users = Data.getUsers();
 
-    // BEGIN
-    @Value("#{'${users.admins}'.split(',')}")
-    private List<String> adminEmails;
+    @Autowired
+    private UserProperties properties;
 
     @GetMapping("/admins")
     public List<String> getAdmins() {
-        return adminEmails.stream()
-                .map(email -> email.substring(0, email.indexOf('@')))
-                .distinct()
+        return properties.getAdmins().stream()
+                .flatMap(e -> users.stream()
+                        .filter(u -> u.getEmail().equals(e)))
+                .map(User::getName)
                 .sorted()
+                .distinct()
                 .collect(Collectors.toList());
     }
     // END
