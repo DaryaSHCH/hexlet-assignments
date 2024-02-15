@@ -35,8 +35,13 @@ public class PeopleController {
         return personRepository.save(person);
     }
 
+    @GetMapping
+    public List<Person> getAllPeople() {
+        return personRepository.findAll();
+    }
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void deletePerson(@PathVariable long id) {
         personRepository.deleteById(id);
     }
