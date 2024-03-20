@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.Optional;
 
 import exercise.model.Post;
 import exercise.repository.PostRepository;
@@ -23,13 +24,14 @@ import exercise.exception.ResourceNotFoundException;
 @RequestMapping("/posts")
 public class PostsController {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+
     @Autowired
-    public void PostsController(PostRepository postRepository) {
+    public PostsController(PostRepository postRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
-    @Autowired
-    CommentRepository commentRepository;
 
     @GetMapping(path = "")
     public List<Post> index() {
@@ -43,15 +45,15 @@ public class PostsController {
 
     @GetMapping(path = "/{id}")
     public Post getById(@PathVariable long id) {
-        var post =  postRepository.findById(id)
+        return postRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
-
-        return post;
     }
 
     @PutMapping(path = "/{id}")
     public Post update(@PathVariable long id, @RequestBody Post postData) {
-        var post =  postRepository.findById(id)
+        var post = postRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
 
         post.setTitle(postData.getTitle());
@@ -64,8 +66,8 @@ public class PostsController {
 
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable long id) {
-        postRepository.deleteById(id);
         commentRepository.deleteByPostId(id);
+        postRepository.deleteById(id);
     }
 }
 // END
